@@ -2,9 +2,13 @@
 [![Build Status](https://travis-ci.org/kelektiv/node.bcrypt.js.svg?branch=master)](https://travis-ci.org/kelektiv/node.bcrypt.js)
 [![Dependency Status](https://david-dm.org/kelektiv/node.bcrypt.js.svg)](https://david-dm.org/kelektiv/node.bcrypt.js)
 
-Biblioteca para te ajudar a misturar senhas com base no bcrypt. 
+Biblioteca para te ajudar a misturar senhas com base no bcrypt.
+
 Tradução para Português por Coloringa.
+
 Autor: [autor]
+
+
 [bcrypt na wikipedia][bcryptwiki]
 
 Catalisador para este módulo: [How To Safely Store A Password][codahale]
