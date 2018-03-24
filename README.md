@@ -255,21 +255,21 @@ O código para isto vem de algumas fontes:
 
 ## Contributors
 
-* [Antonio Salazar Cardozo][shadowfiend] - Early MacOS X support (when we used libbsd)
-* [Ben Glow][pixelglow] - Fixes for thread safety with async calls
-* [Van Nguyen][thegoleffect] - Found a timing attack in the comparator
-* [NewITFarmer][newitfarmer] - Initial Cygwin support
-* [David Trejo][dtrejo] - packaging fixes
-* [Alfred Westerveld][alfredwesterveld] - packaging fixes
-* [Vincent Côté-Roy][vincentr] - Testing around concurrency issues
-* [Lloyd Hilaiel][lloyd] - Documentation fixes
-* [Roman Shtylman][shtylman] - Code refactoring, general rot reduction, compile options, better memory management with delete and new, and an upgrade to libuv over eio/ev.
-* [Vadim Graboys][vadimg] - Code changes to support 0.5.5+
-* [Ben Noordhuis][bnoordhuis] - Fixed a thread safety issue in nodejs that was perfectly mappable to this module.
-* [Nate Rajlich][tootallnate] - Bindings and build process.
-* [Sean McArthur][seanmonstar] - Windows Support
-* [Fanie Oosthuysen][weareu] - Windows Support
-* [Amitosh Swain Mahapatra][agathver] - ES6 Promise Support
+* [Antonio Salazar Cardozo][shadowfiend] - Suporte antecipado ao MacOS X (quando usamos libbsd)
+* [Ben Glow][pixelglow] - Correções para segurança de thread com chamadas assíncronas
+* [Van Nguyen][thegoleffect] - Encontrou um ataque de temporização no comparador
+* [NewITFarmer][newitfarmer] - Suporte inicial a Cygwin
+* [David Trejo][dtrejo] - correções de embalagem
+* [Alfred Westerveld][alfredwesterveld] - correções de embalagem
+* [Vincent Côté-Roy][vincentr] - Testando em torno de problemas de concorrência
+* [Lloyd Hilaiel][lloyd] - Correções na documentação
+* [Roman Shtylman][shtylman] - Refatoração de código, Code refactoring, redução geral de podridão, opções de compilação, melhor gerenciamento de memória com delete e new, e um upgrade ao libuv em eio/ev.
+* [Vadim Graboys][vadimg] - Mudanças no código para suportar 0.5.5+
+* [Ben Noordhuis][bnoordhuis] - Corrigiu um problema de segurança em nodejs que foi perfeitamente mapeável para este módulo.
+* [Nate Rajlich][tootallnate] - Ligações e processo de construção.
+* [Sean McArthur][seanmonstar] - Suporte a Windows
+* [Fanie Oosthuysen][weareu] - Suporte a Windows
+* [Amitosh Swain Mahapatra][agathver] - Suporte a Promise ES6
 
 ## License
 A menos que especificado em outro lugar, cabeçalhos de arquivo ou outros, a licença, conforme declarada no arquivo LICENSE.
