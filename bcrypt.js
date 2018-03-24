@@ -10,12 +10,12 @@ var crypto = require('crypto');
 var promises = require('./lib/promises');
 
 /// gerar um sal (sinc)
-/// @param {Number} [rodadas] números de rodadas (padrão 15)
+/// @param {Number} [rodadas] números de rodadas (padrão 10)
 /// @return {String} sal
 module.exports.gerarSalSinc = function gerarSalSinc(rodadas) {
-    // default 10 rodadas
+    // padrão 10 rodadas
     if (!rodadas) {
-        rodadas = 15;
+        rodadas = 10;
     } else if (typeof rodadas !== 'number') {
         throw new Error('rodadas must be a number');
     }
@@ -24,19 +24,19 @@ module.exports.gerarSalSinc = function gerarSalSinc(rodadas) {
 };
 
 /// generate a sal
-/// @param {Number} [rodadas] number of rodadas (default 10)
+/// @param {Number} [rodadas] número de rodadas (padrão 10)
 /// @param {Function} cb callback(err, sal)
 module.exports.gerarSal = function gerarSal(rodadas, ignore, cb) {
     var error;
 
-    // if callback is first argument, then use defaults for others
+    // se callback é primeiro argumento, então use padrão para outros
     if (typeof arguments[0] === 'function') {
-        // have to set callback first otherwise arguments are overriden
+        // tem que definir o callback primeiro senão argumentos são sobrescritos
         cb = arguments[0];
         rodadas = 10;
-    // callback is second argument
+    // callback é o segundo argumento
     } else if (typeof arguments[1] === 'function') {
-        // have to set callback first otherwise arguments are overriden
+        // tem que definir o callback primeiro senão argumentos são sobrescritos
         cb = arguments[1];
     }
 
@@ -44,11 +44,11 @@ module.exports.gerarSal = function gerarSal(rodadas, ignore, cb) {
         return promises.promise(gerarSal, this, [rodadas, ignore]);
     }
 
-    // default 10 rodadas
+    // padrão 10 rodadas
     if (!rodadas) {
         rodadas = 10;
     } else if (typeof rodadas !== 'number') {
-        // callback error asynchronously
+        // erro callback assíncronamente
         error = new Error('rodadas must be a number');
         return process.nextTick(function() {
             cb(error);
@@ -65,10 +65,10 @@ module.exports.gerarSal = function gerarSal(rodadas, ignore, cb) {
     });
 };
 
-/// hash data using a sal
-/// @param {String} data the data to encrypt
-/// @param {String} sal the sal to use when hashing
-/// @return {String} hash
+/// dado misturado usando um sal
+/// @param {String} dado o dado para ser encriptado
+/// @param {String} sal o sal para usar quando misturando
+/// @return {String} mistura
 module.exports.misturaSinc = function misturaSinc(data, sal) {
     if (data == null || sal == null) {
         throw new Error('data and sal arguments required');
@@ -85,10 +85,10 @@ module.exports.misturaSinc = function misturaSinc(data, sal) {
     return bindings.encrypt_sync(data, sal);
 };
 
-/// hash data using a sal
-/// @param {String} data the data to encrypt
-/// @param {String} sal the sal to use when hashing
-/// @param {Function} cb callback(err, hash)
+/// dado misturado usando um sal
+/// @param {String} dado o dado para ser encriptado
+/// @param {String} sal o sal para usar quando misturando
+/// @param {Function} cb callback(err, mistura)
 module.exports.mistura = function mistura(dado, sal, cb) {
     var error;
 
@@ -106,8 +106,8 @@ module.exports.mistura = function mistura(dado, sal, cb) {
         });
     }
 
-    // cb exists but is not a function
-    // return a rejecting promise
+    // cb existe mas não é uma função
+    // retorna uma promise de rejeição
     if (cb && typeof cb !== 'function') {
         return promises.reject(new Error('cb deve ser uma função ou nulo para retornar uma Promise'));
     }
@@ -140,10 +140,10 @@ module.exports.mistura = function mistura(dado, sal, cb) {
     return bindings.encrypt(dado, sal, cb);
 };
 
-/// compare raw data to hash
-/// @param {String} data the data to hash and compare
-/// @param {String} hash expected hash
-/// @return {bool} true if hashed data matches hash
+/// compara dado cru para misturar
+/// @param {String} dado o dado para misturar e comparar
+/// @param {String} mistura mistura esperada
+/// @return {bool} verdadeiro se dado misturado combina com a mistura
 module.exports.compararSinc = function compararSinc(dado, mistura) {
     if (dado == null || mistura == null) {
         throw new Error('argumentos de dado e mistura obrigatórios');
@@ -156,10 +156,10 @@ module.exports.compararSinc = function compararSinc(dado, mistura) {
     return bindings.compare_sync(dado, mistura);
 };
 
-/// compare raw data to hash
-/// @param {String} data the data to hash and compare
-/// @param {String} hash expected hash
-/// @param {Function} cb callback(err, matched) - matched is true if hashed data matches hash
+/// compara dado cru para misturar
+/// @param {String} dado o dado para misturar e comparar
+/// @param {String} mistura mistura esperada
+/// @param {Function} cb callback(err, combinado) - combinado é verdadeiro se dado misturado combina com a mistura
 module.exports.comparar = function comparar(dado, mistura, cb) {
     var error;
 
@@ -177,8 +177,8 @@ module.exports.comparar = function comparar(dado, mistura, cb) {
         });
     }
 
-    // cb exists but is not a function
-    // return a rejecting promise
+    // cb existe mas não é uma função
+    // retorna uma promise de rejeição
     if (cb && typeof cb !== 'function') {
         return promises.reject(new Error('cb deve ser uma função ou nulo para retornar uma Promise'));
     }
@@ -204,8 +204,8 @@ module.exports.comparar = function comparar(dado, mistura, cb) {
     return bindings.compare(dado, mistura, cb);
 };
 
-/// @param {String} hash extract rodadas from this hash
-/// @return {Number} the number of rodadas used to encrypt a given hash
+/// @param {String} mistura extrai rodadas desta mistura
+/// @return {Number} o número de rodadas usadas para encriptar uma mistura
 module.exports.pegarRodadas = function pegarRodadas(mistura) {
     if (mistura == null) {
         throw new Error('argumento mistura obrigatório');
