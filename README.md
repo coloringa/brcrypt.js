@@ -1,8 +1,8 @@
-# node.bcrypt.js
+# brcrypt.js
 [![Build Status](https://travis-ci.org/kelektiv/node.bcrypt.js.svg?branch=master)](https://travis-ci.org/kelektiv/node.bcrypt.js)
 [![Dependency Status](https://david-dm.org/kelektiv/node.bcrypt.js.svg)](https://david-dm.org/kelektiv/node.bcrypt.js)
 
-Biblioteca para te ajudar a misturar senhas.
+Biblioteca para te ajudar a misturar senhas em Português com base no bcrypt.
 [bcrypt na wikipedia][bcryptwiki]
 
 Catalisador para este módulo: [How To Safely Store A Password][codahale]
@@ -16,7 +16,7 @@ Se você está usando uma versão estável do Node, nós podemos magicamente sab
 
 ## Compatibilidade de versão
 
-| Versão do Node | Versão do Bcrypt |
+| Versão do Node | Versão do brcrypt |
 | ---- | ---- |
 | 0.4.x | <= 0.4.x |
 | 0.6.x | >= 0.5.x |
@@ -72,7 +72,7 @@ npm install brcrypt
 ### async (recomendado)
 
 ```javascript
-var bcrypt = require('bcrypt');
+var brcrypt = require('brcrypt');
 const saltRounds = 10;
 const myPlaintextPassword = 's0/\/\P4$$w0rD';
 const someOtherPlaintextPassword = 'quero_bacon';
@@ -83,8 +83,8 @@ const someOtherPlaintextPassword = 'quero_bacon';
 Técnica 1 (gere um sal e uma mistura em chamadas de função separadas):
 
 ```javascript
-bcrypt.genSalt(saltRounds, function(err, salt) {
-    bcrypt.hash(minhaSenhaSimples, salt, function(err, mistura) {
+brcrypt.genSal(saltRounds, function(err, salt) {
+    brcrypt.mistura(minhaSenhaSimples, salt, function(err, mistura) {
         // Armazene a mistura em seu DB de senha.
     });
 });
@@ -93,7 +93,7 @@ bcrypt.genSalt(saltRounds, function(err, salt) {
 Technique 2 (gerar automaticamente um sal e uma mistura):
 
 ```javascript
-bcrypt.hash(minhaSenhaSimples, saltRounds, function(err, mistura) {
+brcrypt.mistura(minhaSenhaSimples, saltRounds, function(err, mistura) {
   // Armazene a mistura em seu DB de senha.
 });
 ```
@@ -104,10 +104,10 @@ Note que ambas técnicas alcançam o mesmo resultado final.
 
 ```javascript
 // Carregue a mistura em seu DB de senha.
-bcrypt.compare(minhaSenhaSimples, mistura, function(err, res) {
+brcrypt.comparar(minhaSenhaSimples, mistura, function(err, res) {
     // res == true
 });
-bcrypt.compare(outraSenhaSimples, mistura, function(err, res) {
+brcrypt.comparar(outraSenhaSimples, mistura, function(err, res) {
     // res == false
 });
 ```
@@ -118,21 +118,21 @@ chaves criptográficas, ou misturas criptográficas se eles são relevantes para
 
 ### com promessas
 
-bcrypt usa quaisquer implementação de Promise disponível em `global.Promise`. NodeJS >= 0.12 tem uma implementação nativa de Promise embutida. No entanto, isto deve funcionar em quaisquer implementação de Promises/A+.
+brcrypt usa quaisquer implementação de Promise disponível em `global.Promise`. NodeJS >= 0.12 tem uma implementação nativa de Promise embutida. No entanto, isto deve funcionar em quaisquer implementação de Promises/A+.
 
 Métodos async que aceitam um callback, retornam uma `Promise` quando o callback não é especificado se o suporte de Promise está disponível.
 
 ```javascript
-bcrypt.hash(minhaSenhaSimples, rodadasDeSal).then(function(mistura) {
+brcrypt.mistura(minhaSenhaSimples, rodadasDeSal).then(function(mistura) {
     // Guarde a mistura em seu DB de senha
 });
 ```
 ```javascript
 // Carregue a mistura de seu DB de senha.
-bcrypt.compare(minhaSenhaSimples, mistura).then(function(res) {
+brcrypt.comparar(minhaSenhaSimples, mistura).then(function(res) {
     // res == true
 });
-bcrypt.compare(outraSenhaSimples, mistura).then(function(res) {
+brcrypt.comparar(outraSenhaSimples, mistura).then(function(res) {
     // res == false
 });
 ```
