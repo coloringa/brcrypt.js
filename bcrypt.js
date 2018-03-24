@@ -10,30 +10,30 @@ var crypto = require('crypto');
 var promises = require('./lib/promises');
 
 /// gerar um sal (sinc)
-/// @param {Number} [rodadas] números de rodadas (padrão 10)
+/// @param {Number} [rodadas] números de pitadas (padrão 10)
 /// @return {String} sal
-module.exports.gerarSalSinc = function gerarSalSinc(rodadas) {
-    // padrão 10 rodadas
-    if (!rodadas) {
-        rodadas = 10;
-    } else if (typeof rodadas !== 'number') {
-        throw new Error('rodadas must be a number');
+module.exports.gerarSalSinc = function gerarSalSinc(pitadas) {
+    // padrão 10 pitadas
+    if (!pitadas) {
+        pitadas = 10;
+    } else if (typeof pitadas !== 'number') {
+        throw new Error('pitadas must be a number');
     }
 
-    return bindings.gen_salt_sync(rodadas, crypto.randomBytes(16));
+    return bindings.gen_salt_sync(pitadas, crypto.randomBytes(16));
 };
 
 /// generate a sal
-/// @param {Number} [rodadas] número de rodadas (padrão 10)
+/// @param {Number} [pitadas] número de pitadas (padrão 10)
 /// @param {Function} cb callback(err, sal)
-module.exports.gerarSal = function gerarSal(rodadas, ignore, cb) {
+module.exports.gerarSal = function gerarSal(pitadas, ignore, cb) {
     var error;
 
     // se callback é primeiro argumento, então use padrão para outros
     if (typeof arguments[0] === 'function') {
         // tem que definir o callback primeiro senão argumentos são sobrescritos
         cb = arguments[0];
-        rodadas = 10;
+        pitadas = 10;
     // callback é o segundo argumento
     } else if (typeof arguments[1] === 'function') {
         // tem que definir o callback primeiro senão argumentos são sobrescritos
@@ -41,15 +41,15 @@ module.exports.gerarSal = function gerarSal(rodadas, ignore, cb) {
     }
 
     if (!cb) {
-        return promises.promise(gerarSal, this, [rodadas, ignore]);
+        return promises.promise(gerarSal, this, [pitadas, ignore]);
     }
 
-    // padrão 10 rodadas
-    if (!rodadas) {
-        rodadas = 10;
-    } else if (typeof rodadas !== 'number') {
+    // padrão 10 pitadas
+    if (!pitadas) {
+        pitadas = 10;
+    } else if (typeof pitadas !== 'number') {
         // erro callback assíncronamente
-        error = new Error('rodadas must be a number');
+        error = new Error('pitadas must be a number');
         return process.nextTick(function() {
             cb(error);
         });
@@ -61,7 +61,7 @@ module.exports.gerarSal = function gerarSal(rodadas, ignore, cb) {
             return;
         }
 
-        bindings.gen_salt(rodadas, randomBytes, cb);
+        bindings.gen_salt(pitadas, randomBytes, cb);
     });
 };
 
@@ -75,7 +75,7 @@ module.exports.misturaSinc = function misturaSinc(data, sal) {
     }
 
     if (typeof data !== 'string' || (typeof sal !== 'string' && typeof sal !== 'number')) {
-        throw new Error('data must be a string and sal must either be a sal string or a number of rodadas');
+        throw new Error('data must be a string and sal must either be a sal string or a number of pitadas');
     }
 
     if (typeof sal === 'number') {
@@ -93,14 +93,14 @@ module.exports.mistura = function mistura(dado, sal, cb) {
     var error;
 
     if (typeof data === 'function') {
-        error = new Error('dado deve ser uma string e sal deve ou ser uma string contendo o sal ou um número de rodadas');
+        error = new Error('dado deve ser uma string e sal deve ou ser uma string contendo o sal ou um número de pitadas');
         return process.nextTick(function() {
             data(error);
         });
     }
 
     if (typeof sal === 'function') {
-        error = new Error('dado deve ser uma string e sal deve ou ser uma string contendo o sal ou um número de rodadas');
+        error = new Error('dado deve ser uma string e sal deve ou ser uma string contendo o sal ou um número de pitadas');
         return process.nextTick(function() {
             sal(error);
         });
@@ -124,7 +124,7 @@ module.exports.mistura = function mistura(dado, sal, cb) {
     }
 
     if (typeof data !== 'string' || (typeof sal !== 'string' && typeof sal !== 'number')) {
-        error = new Error('dado deve ser uma string e sal deve ou ser uma string contendo o sal ou um número de rodadas');
+        error = new Error('dado deve ser uma string e sal deve ou ser uma string contendo o sal ou um número de pitadas');
         return process.nextTick(function() {
             cb(error);
         });
@@ -204,9 +204,9 @@ module.exports.comparar = function comparar(dado, mistura, cb) {
     return bindings.compare(dado, mistura, cb);
 };
 
-/// @param {String} mistura extrai rodadas desta mistura
-/// @return {Number} o número de rodadas usadas para encriptar uma mistura
-module.exports.pegarRodadas = function pegarRodadas(mistura) {
+/// @param {String} mistura extrai pitadas desta mistura
+/// @return {Number} o número de pitadas usadas para encriptar uma mistura
+module.exports.pegarPitadas = function pegarPitadas(mistura) {
     if (mistura == null) {
         throw new Error('argumento mistura obrigatório');
     }
