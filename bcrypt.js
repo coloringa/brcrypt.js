@@ -9,31 +9,31 @@ var crypto = require('crypto');
 
 var promises = require('./lib/promises');
 
-/// generate a salt (sync)
-/// @param {Number} [rounds] number of rounds (default 10)
-/// @return {String} salt
-module.exports.genSaltSync = function genSaltSync(rounds) {
-    // default 10 rounds
-    if (!rounds) {
-        rounds = 10;
-    } else if (typeof rounds !== 'number') {
-        throw new Error('rounds must be a number');
+/// gerar um sal (sinc)
+/// @param {Number} [rodadas] números de rodadas (padrão 15)
+/// @return {String} sal
+module.exports.gerarSalSinc = function gerarSalSinc(rodadas) {
+    // default 10 rodadas
+    if (!rodadas) {
+        rodadas = 15;
+    } else if (typeof rodadas !== 'number') {
+        throw new Error('rodadas must be a number');
     }
 
-    return bindings.gen_salt_sync(rounds, crypto.randomBytes(16));
+    return bindings.gen_salt_sync(rodadas, crypto.randomBytes(16));
 };
 
-/// generate a salt
-/// @param {Number} [rounds] number of rounds (default 10)
-/// @param {Function} cb callback(err, salt)
-module.exports.genSalt = function genSalt(rounds, ignore, cb) {
+/// generate a sal
+/// @param {Number} [rodadas] number of rodadas (default 10)
+/// @param {Function} cb callback(err, sal)
+module.exports.gerarSal = function gerarSal(rodadas, ignore, cb) {
     var error;
 
     // if callback is first argument, then use defaults for others
     if (typeof arguments[0] === 'function') {
         // have to set callback first otherwise arguments are overriden
         cb = arguments[0];
-        rounds = 10;
+        rodadas = 10;
     // callback is second argument
     } else if (typeof arguments[1] === 'function') {
         // have to set callback first otherwise arguments are overriden
@@ -41,15 +41,15 @@ module.exports.genSalt = function genSalt(rounds, ignore, cb) {
     }
 
     if (!cb) {
-        return promises.promise(genSalt, this, [rounds, ignore]);
+        return promises.promise(gerarSal, this, [rodadas, ignore]);
     }
 
-    // default 10 rounds
-    if (!rounds) {
-        rounds = 10;
-    } else if (typeof rounds !== 'number') {
+    // default 10 rodadas
+    if (!rodadas) {
+        rodadas = 10;
+    } else if (typeof rodadas !== 'number') {
         // callback error asynchronously
-        error = new Error('rounds must be a number');
+        error = new Error('rodadas must be a number');
         return process.nextTick(function() {
             cb(error);
         });
@@ -61,117 +61,117 @@ module.exports.genSalt = function genSalt(rounds, ignore, cb) {
             return;
         }
 
-        bindings.gen_salt(rounds, randomBytes, cb);
+        bindings.gen_salt(rodadas, randomBytes, cb);
     });
 };
 
-/// hash data using a salt
+/// hash data using a sal
 /// @param {String} data the data to encrypt
-/// @param {String} salt the salt to use when hashing
+/// @param {String} sal the sal to use when hashing
 /// @return {String} hash
-module.exports.hashSync = function hashSync(data, salt) {
-    if (data == null || salt == null) {
-        throw new Error('data and salt arguments required');
+module.exports.misturaSinc = function misturaSinc(data, sal) {
+    if (data == null || sal == null) {
+        throw new Error('data and sal arguments required');
     }
 
-    if (typeof data !== 'string' || (typeof salt !== 'string' && typeof salt !== 'number')) {
-        throw new Error('data must be a string and salt must either be a salt string or a number of rounds');
+    if (typeof data !== 'string' || (typeof sal !== 'string' && typeof sal !== 'number')) {
+        throw new Error('data must be a string and sal must either be a sal string or a number of rodadas');
     }
 
-    if (typeof salt === 'number') {
-        salt = module.exports.genSaltSync(salt);
+    if (typeof sal === 'number') {
+        sal = module.exports.gerarSalSinc(sal);
     }
 
-    return bindings.encrypt_sync(data, salt);
+    return bindings.encrypt_sync(data, sal);
 };
 
-/// hash data using a salt
+/// hash data using a sal
 /// @param {String} data the data to encrypt
-/// @param {String} salt the salt to use when hashing
+/// @param {String} sal the sal to use when hashing
 /// @param {Function} cb callback(err, hash)
-module.exports.hash = function hash(data, salt, cb) {
+module.exports.mistura = function mistura(dado, sal, cb) {
     var error;
 
     if (typeof data === 'function') {
-        error = new Error('data must be a string and salt must either be a salt string or a number of rounds');
+        error = new Error('dado deve ser uma string e sal deve ou ser uma string contendo o sal ou um número de rodadas');
         return process.nextTick(function() {
             data(error);
         });
     }
 
-    if (typeof salt === 'function') {
-        error = new Error('data must be a string and salt must either be a salt string or a number of rounds');
+    if (typeof sal === 'function') {
+        error = new Error('dado deve ser uma string e sal deve ou ser uma string contendo o sal ou um número de rodadas');
         return process.nextTick(function() {
-            salt(error);
+            sal(error);
         });
     }
 
     // cb exists but is not a function
     // return a rejecting promise
     if (cb && typeof cb !== 'function') {
-        return promises.reject(new Error('cb must be a function or null to return a Promise'));
+        return promises.reject(new Error('cb deve ser uma função ou nulo para retornar uma Promise'));
     }
 
     if (!cb) {
-        return promises.promise(hash, this, [data, salt]);
+        return promises.promise(mistura, this, [dado, sal]);
     }
 
-    if (data == null || salt == null) {
-        error = new Error('data and salt arguments required');
+    if (dado == null || sal == null) {
+        error = new Error('argumentos de dado e sal são obrigatórios');
         return process.nextTick(function() {
             cb(error);
         });
     }
 
-    if (typeof data !== 'string' || (typeof salt !== 'string' && typeof salt !== 'number')) {
-        error = new Error('data must be a string and salt must either be a salt string or a number of rounds');
+    if (typeof data !== 'string' || (typeof sal !== 'string' && typeof sal !== 'number')) {
+        error = new Error('dado deve ser uma string e sal deve ou ser uma string contendo o sal ou um número de rodadas');
         return process.nextTick(function() {
             cb(error);
         });
     }
 
 
-    if (typeof salt === 'number') {
-        return module.exports.genSalt(salt, function(err, salt) {
-            return bindings.encrypt(data, salt, cb);
+    if (typeof sal === 'number') {
+        return module.exports.gerarSal(sal, function(err, sal) {
+            return bindings.encrypt(dado, sal, cb);
         });
     }
 
-    return bindings.encrypt(data, salt, cb);
+    return bindings.encrypt(dado, sal, cb);
 };
 
 /// compare raw data to hash
 /// @param {String} data the data to hash and compare
 /// @param {String} hash expected hash
 /// @return {bool} true if hashed data matches hash
-module.exports.compareSync = function compareSync(data, hash) {
-    if (data == null || hash == null) {
-        throw new Error('data and hash arguments required');
+module.exports.compararSinc = function compararSinc(dado, mistura) {
+    if (dado == null || mistura == null) {
+        throw new Error('argumentos de dado e mistura obrigatórios');
     }
 
-    if (typeof data !== 'string' || typeof hash !== 'string') {
-        throw new Error('data and hash must be strings');
+    if (typeof dado !== 'string' || typeof mistura !== 'string') {
+        throw new Error('argumentos de dado e mistura devem ser strings');
     }
 
-    return bindings.compare_sync(data, hash);
+    return bindings.compare_sync(dado, mistura);
 };
 
 /// compare raw data to hash
 /// @param {String} data the data to hash and compare
 /// @param {String} hash expected hash
 /// @param {Function} cb callback(err, matched) - matched is true if hashed data matches hash
-module.exports.compare = function compare(data, hash, cb) {
+module.exports.comparar = function comparar(dado, mistura, cb) {
     var error;
 
-    if (typeof data === 'function') {
-        error = new Error('data and hash arguments required');
+    if (typeof dado === 'function') {
+        error = new Error('argumentos dado e mistura são obrigatórios');
         return process.nextTick(function() {
             data(error);
         });
     }
 
-    if (typeof hash === 'function') {
-        error = new Error('data and hash arguments required');
+    if (typeof mistura === 'function') {
+        error = new Error('argumentos de dado e mistura são obrigatórios');
         return process.nextTick(function() {
             hash(error);
         });
@@ -180,40 +180,40 @@ module.exports.compare = function compare(data, hash, cb) {
     // cb exists but is not a function
     // return a rejecting promise
     if (cb && typeof cb !== 'function') {
-        return promises.reject(new Error('cb must be a function or null to return a Promise'));
+        return promises.reject(new Error('cb deve ser uma função ou nulo para retornar uma Promise'));
     }
 
     if (!cb) {
-        return promises.promise(compare, this, [data, hash]);
+        return promises.promise(compare, this, [dado, mistura]);
     }
 
-    if (data == null || hash == null) {
-        error = new Error('data and hash arguments required');
+    if (data == null || mistura == null) {
+        error = new Error('argumentos de dado e mistura são obrigatórios');
         return process.nextTick(function() {
             cb(error);
         });
     }
 
-    if (typeof data !== 'string' || typeof hash !== 'string') {
-        error = new Error('data and hash must be strings');
+    if (typeof data !== 'string' || typeof mistura !== 'string') {
+        error = new Error('dado e mistura devem ser strings');
         return process.nextTick(function() {
             cb(error);
         });
     }
 
-    return bindings.compare(data, hash, cb);
+    return bindings.compare(dado, mistura, cb);
 };
 
-/// @param {String} hash extract rounds from this hash
-/// @return {Number} the number of rounds used to encrypt a given hash
-module.exports.getRounds = function getRounds(hash) {
-    if (hash == null) {
-        throw new Error('hash argument required');
+/// @param {String} hash extract rodadas from this hash
+/// @return {Number} the number of rodadas used to encrypt a given hash
+module.exports.pegarRodadas = function pegarRodadas(mistura) {
+    if (mistura == null) {
+        throw new Error('argumento mistura obrigatório');
     }
 
-    if (typeof hash !== 'string') {
-        throw new Error('hash must be a string');
+    if (typeof mistura !== 'string') {
+        throw new Error('mistura deve ser uma string');
     }
 
-    return bindings.get_rounds(hash);
+    return bindings.get_rounds(mistura);
 };
