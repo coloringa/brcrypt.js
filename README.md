@@ -6,7 +6,7 @@ Biblioteca para te ajudar a misturar senhas com base no bcrypt.
 
 Tradução para Português por Coloringa.
 
-Autor: [autor]
+Autor: [kelektiv]
 
 
 [bcrypt na wikipedia][bcryptwiki]
@@ -303,4 +303,4 @@ A menos que especificado em outro lugar, cabeçalhos de arquivo ou outros, a lic
 [seanmonstar]:https://github.com/seanmonstar
 [weareu]:https://github.com/weareu
 [agathver]:https://github.com/Agathver
-[autor]: https://github.com/kelektiv/node.bcrypt.js
+[kelektiv]: https://github.com/kelektiv/node.bcrypt.js
