@@ -6,8 +6,7 @@ Biblioteca para te ajudar a misturar senhas com base no bcrypt.
 
 Tradução para Português por Coloringa.
 
-Autor: [kelektiv]
-
+Bcrypt Author: [kelektiv]
 
 [bcrypt na wikipedia][bcryptwiki]
 
@@ -79,7 +78,7 @@ npm install brcrypt
 
 ```javascript
 var brcrypt = require('brcrypt');
-const rodadasDeSal = 10;
+const pitadasDeSal = 10;
 const minhaSenhaSimples = 's0/\/\P4$$w0rD';
 const outraSenhaSimples = 'quero_bacon';
 ```
@@ -89,7 +88,7 @@ const outraSenhaSimples = 'quero_bacon';
 Técnica 1 (gere um sal e uma mistura em chamadas de função separadas):
 
 ```javascript
-brcrypt.gerarSal(rodadasDeSal, function(err, sal) {
+brcrypt.gerarSal(pitadasDeSal, function(err, sal) {
     brcrypt.mistura(minhaSenhaSimples, sal, function(err, mistura) {
         // Armazene a mistura em seu DB de senha.
     });
@@ -99,7 +98,7 @@ brcrypt.gerarSal(rodadasDeSal, function(err, sal) {
 Technique 2 (gerar automaticamente um sal e uma mistura):
 
 ```javascript
-brcrypt.mistura(minhaSenhaSimples, saltRounds, function(err, mistura) {
+brcrypt.mistura(minhaSenhaSimples, pitadasDeSal, function(err, mistura) {
   // Armazene a mistura em seu DB de senha.
 });
 ```
@@ -147,7 +146,7 @@ brcrypt.comparar(outraSenhaSimples, mistura).then(function(res) {
 
 ```javascript
 var brcrypt = require('brcrypt');
-const rodadasDeSal = 10;
+const pitadasDeSal = 10;
 const minhaSenhaSimples = 's0/\/\P4$$w0rD';
 const outraSenhaSimples = 'quero_bacon';
 ```
@@ -157,7 +156,7 @@ const outraSenhaSimples = 'quero_bacon';
 Técnica 1 (gerar um sal e uma mistura em funções separadas):
 
 ```javascript
-var salt = brcrypt.gerarSalSinc(rodadasDeSal);
+var sal = brcrypt.gerarSalSinc(rodadasDeSal);
 var hash = brcrypt.misturaSinc(minhaSenhaSimples, sal);
 // Guarde a mistura em seu DB de senha.
 ```
@@ -165,7 +164,7 @@ var hash = brcrypt.misturaSinc(minhaSenhaSimples, sal);
 Technique 2 (gerar um sal e uma mistura automaticamente):
 
 ```javascript
-var hash = brcrypt.hashSync(minhaSenhaSimples, rodadasDeSal);
+var hash = brcrypt.misturaSinc(minhaSenhaSimples, rodadasDeSal);
 // Guarde a mistura em seu DB de senha.
 ```
 
@@ -190,9 +189,9 @@ Se você está usando brcrypt em um script simples, usar o modo sync cai muito b
 `BRCrypt.`
 
   * `gerarSincDeSal(rodadas)`
-    * `rodadas` - [OPTIONAL] - o custo de processamento de dado. (default - 10)
+    * `pitadas` - [OPTIONAL] - o custo de processamento de dado. (default - 10)
   * `gerarSal(rounds, cb)`
-    * `rodadas` - [OPTIONAL] - o custo de processamento de dado. (default - 10)
+    * `pitadas` - [OPTIONAL] - o custo de processamento de dado. (default - 10)
     * `cb` - [OPTIONAL] - um callback a ser acionado assim que o sal foi gerado. Usa eio fazendo-o assíncrono. Se `cb`não é especificado, uma `Promise` é retornada se suporte a Promise está disponível.
       * `err` - Primeiro parâmetro para o callback detalhando quaisquer erros.
       * `sal` - Segundo parâmetro para o callback fornecendo o sal gerado.
@@ -214,7 +213,7 @@ Se você está usando brcrypt em um script simples, usar o modo sync cai muito b
     * `cb` - [OPTIONAL] - um callback a ser acionado assim que o sal foi gerado. Usa eio fazendo-o assíncrono. Se `cb`não é especificado, uma `Promise` é retornada se suporte a Promise está disponível.
       * `err` - Primeiro parâmetro para o callback detalhando quaisquer erros.
       * `same` - Segundo parâmetro para o callback fornecendo ou dado ou combinações de formulários encriptados [true | false].
-  * `pegarRodadas(encriptado)` - retorna o número de rodadas usado para encriptar uma mistura
+  * `pegarPitadas(encriptado)` - retorna o número de rodadas usado para encriptar uma mistura
     * `encriptado` - [REQUIRED] - mistura da qual o número de rodadas usado deve ser extraído.
 
 ## Uma nota em Rodadas
@@ -223,16 +222,16 @@ Uma nota sobre o custo. Quando você está misturando seus dados o módulo passa
 
 From @garthk, on a 2GHz core you can roughly expect:
 
-    rodadas=8 : ~40 misturas/sec
-    rodadas=9 : ~20 misturas/sec
-    rodadas=10: ~10 misturas/sec
-    rodadas=11: ~5  misturas/sec
-    rodadas=12: 2-3 misturas/sec
-    rodadas=13: ~1 segundo/mistura
-    rodadas=14: ~1.5 segundo/mistura
-    rodadas=15: ~3 segundo/mistura
-    rodadas=25: ~1 hora/mistura
-    rodadas=31: 2-3 dias/mistura
+    pitadas=8 : ~40 misturas/sec
+    pitadas=9 : ~20 misturas/sec
+    pitadas=10: ~10 misturas/sec
+    pitadas=11: ~5  misturas/sec
+    pitadas=12: 2-3 misturas/sec
+    pitadas=13: ~1 segundo/mistura
+    pitadas=14: ~1.5 segundo/mistura
+    pitadas=15: ~3 segundo/mistura
+    pitadas=25: ~1 hora/mistura
+    pitadas=31: 2-3 dias/mistura
 
 
 ## Informações de mistura
@@ -304,3 +303,4 @@ A menos que especificado em outro lugar, cabeçalhos de arquivo ou outros, a lic
 [weareu]:https://github.com/weareu
 [agathver]:https://github.com/Agathver
 [kelektiv]: https://github.com/kelektiv/node.bcrypt.js
+[coloringa]: https://github.com/coloringa/brcrypt.js
