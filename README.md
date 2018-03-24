@@ -63,7 +63,7 @@ Compatibilidade com misturas geradas por outras línguas não é 100% garantido 
 Tenha certeza que você tem as dependências apropriadas instaladas e configuradas para sua plataforma. Você pode encontrar instruções de instalação para as dependências para algumas plataformas comuns [nesta páginas][depsinstall].
 
 ```
-npm install bcrypt
+npm install brcrypt
 ```
 ***Nota:*** Usuários de OS X usando Xcode 4.3.1 ou posterior precisam rodar o seguinte comando em seu terminal para instalar se erros em relação ao xcodebuild ocorram: ```sudo xcode-select -switch /Applications/Xcode.app/Contents/Developer```
 
