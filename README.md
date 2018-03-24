@@ -52,7 +52,7 @@ Para tornar fácil para pessoas que usam esta ferramenta para analisar o que foi
 
 ## Nota de compatibilidade
 
-Esta biblioteca suporta `$2a$` e `$2b$` prefixar misturas com bcrypt. `$2x$` e `$2y$` misturas são específicas para a implementação do bcrypt desenvolvida para John the Ripper. Em teoria, eles devem ser compatíveis com o prefixo `$2b$`.
+Esta biblioteca suporta `$2a$` e `$2b$` prefixar misturas com brcrypt. `$2x$` e `$2y$` misturas são específicas para a implementação do brcrypt desenvolvida para John the Ripper. Em teoria, eles devem ser compatíveis com o prefixo `$2b$`.
 
 Compatibilidade com misturas geradas por outras línguas não é 100% garantido pela diferença em codificação de caracteres. Contudo, não deve ser um problema para a maioria dos casos.
 
@@ -63,7 +63,7 @@ Compatibilidade com misturas geradas por outras línguas não é 100% garantido 
  * Favor conferir as dependências para esta ferramenta em: https://github.com/nodejs/node-gyp
   * Usuários de Windows vão precisar as opções para c# e c++ instalados com sua instância do visual studio.
   * Python 2.x
-* `OpenSSL` - Isto só é requerido para construir o projeto `bcrypt` se você está usando versões <= 0.7.7. De outra maneira, nós estamos usando ligações do node crypto embutidas para dados semente(que usa os mesmo caminhos do código OpenSSL que nós estávamos, mas não tem uma dependência externa.
+* `OpenSSL` - Isto só é requerido para construir o projeto `brcrypt` se você está usando versões <= 0.7.7. De outra maneira, nós estamos usando ligações do node crypto embutidas para dados semente(que usa os mesmo caminhos do código OpenSSL que nós estávamos, mas não tem uma dependência externa.
 
 ## Instale via NPM
 Tenha certeza que você tem as dependências apropriadas instaladas e configuradas para sua plataforma. Você pode encontrar instruções de instalação para as dependências para algumas plataformas comuns [nesta páginas][depsinstall].
@@ -79,9 +79,9 @@ npm install brcrypt
 
 ```javascript
 var brcrypt = require('brcrypt');
-const saltRounds = 10;
-const myPlaintextPassword = 's0/\/\P4$$w0rD';
-const someOtherPlaintextPassword = 'quero_bacon';
+const rodadasDeSal = 10;
+const minhaSenhaSimples = 's0/\/\P4$$w0rD';
+const outraSenhaSimples = 'quero_bacon';
 ```
 
 #### Para misturar uma senha:
@@ -89,8 +89,8 @@ const someOtherPlaintextPassword = 'quero_bacon';
 Técnica 1 (gere um sal e uma mistura em chamadas de função separadas):
 
 ```javascript
-brcrypt.genSal(saltRounds, function(err, salt) {
-    brcrypt.mistura(minhaSenhaSimples, salt, function(err, mistura) {
+brcrypt.gerarSal(rodadasDeSal, function(err, sal) {
+    brcrypt.mistura(minhaSenhaSimples, sal, function(err, mistura) {
         // Armazene a mistura em seu DB de senha.
     });
 });
@@ -118,7 +118,7 @@ brcrypt.comparar(outraSenhaSimples, mistura, function(err, res) {
 });
 ```
 
-A função "compare" combate ataques de tempo (usando um algoritmo já conhecido chamado 'constant-time').
+A função "comparar" combate ataque de temporização (usando um algoritmo já conhecido chamado 'constant-time').
 Em geral, não use as comparações normais de string em Javascript para comparar senhas,
 chaves criptográficas, ou misturas criptográficas se eles são relevantes para segurança.
 
@@ -143,10 +143,10 @@ brcrypt.comparar(outraSenhaSimples, mistura).then(function(res) {
 });
 ```
 
-### sync
+### sinc
 
 ```javascript
-var bcrypt = require('bcrypt');
+var brcrypt = require('brcrypt');
 const rodadasDeSal = 10;
 const minhaSenhaSimples = 's0/\/\P4$$w0rD';
 const outraSenhaSimples = 'quero_bacon';
@@ -157,15 +157,15 @@ const outraSenhaSimples = 'quero_bacon';
 Técnica 1 (gerar um sal e uma mistura em funções separadas):
 
 ```javascript
-var salt = bcrypt.genSaltSync(rodadasDeSal);
-var hash = bcrypt.hashSync(minhaSenhaSimples, sal);
+var salt = brcrypt.gerarSalSinc(rodadasDeSal);
+var hash = brcrypt.misturaSinc(minhaSenhaSimples, sal);
 // Guarde a mistura em seu DB de senha.
 ```
 
 Technique 2 (gerar um sal e uma mistura automaticamente):
 
 ```javascript
-var hash = bcrypt.hashSync(minhaSenhaSimples, rodadasDeSal);
+var hash = brcrypt.hashSync(minhaSenhaSimples, rodadasDeSal);
 // Guarde a mistura em seu DB de senha.
 ```
 
@@ -175,19 +175,19 @@ Com async, ambas técnicas alcançam o mesmo resultado final.
 
 ```javascript
 // Carregue a mistura do seu DB de senha.
-bcrypt.compareSync(minhaSenhaSimples, mistura); // true
-bcrypt.compareSync(outraSenhaSimples, mistura); // false
+brcrypt.compararSinc(minhaSenhaSimples, mistura); // true
+brcrypt.compararSinc(outraSenhaSimples, mistura); // false
 ```
-A função "compareSync" combate ataques de tempo (usando um algoritmo já conhecido 'constant-time').
+A função "compararSinc" combate ataques de tempo (usando um algoritmo já conhecido 'constant-time').
 Em geral, não use as comparações normais de string em Javascript para comparar senhas,
 chaves criptográficas, ou misturas criptográficas se eles são relevantes para segurança.
 
 ### Por que o modo async é mais recomendado que sync mode?
-Se você está usando bcrypt em um script simples, usar o modo sync cai muito bem. No entanto, se você está usando bcrypt em um servidor, o modo async é recomendado. Isto porque a mistura feita por bcrypt é instensiva no uso de CPU, então a versão sync irá bloquear o loop de eventos e impedir que seu aplicativo atenda a quaisquer outras solicitações ou eventos de entrada.
+Se você está usando brcrypt em um script simples, usar o modo sync cai muito bem. No entanto, se você está usando bcrypt em um servidor, o modo async é recomendado. Isto porque a mistura feita por bcrypt é instensiva no uso de CPU, então a versão sync irá bloquear o loop de eventos e impedir que seu aplicativo atenda a quaisquer outras solicitações ou eventos de entrada.
 
 ## API
 
-`BCrypt.`
+`BRCrypt.`
 
   * `gerarSincDeSal(rodadas)`
     * `rodadas` - [OPTIONAL] - o custo de processamento de dado. (default - 10)
